@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOrderRoomsTable extends Migration
+class CreateOrderFoodTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateOrderRoomsTable extends Migration
      */
     public function up()
     {
-        Schema::create('order_rooms', function (Blueprint $table) {
+        Schema::create('order_foods', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('room_id');
+            $table->unsignedBigInteger('food_id');
             $table->string('order_code');
             $table->date('start_from');
             $table->date('end_at');
@@ -24,7 +24,7 @@ class CreateOrderRoomsTable extends Migration
 
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('room_id')->references('id')->on('rooms')->onDelete('cascade');
+            $table->foreign('food_id')->references('id')->on('foods')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -36,6 +36,6 @@ class CreateOrderRoomsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('order_rooms');
+        Schema::dropIfExists('order_foods');
     }
 }
