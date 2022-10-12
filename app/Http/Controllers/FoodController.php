@@ -21,9 +21,10 @@ class FoodController extends Controller
                 $datas['id'] = $value->id;
                 $datas['name'] = $value->name;
                 $datas['price'] = $value->price;
-                $datas['faccility'] = $value->faccility;
+
                 $datas['thumb'] = env('APP_URL').'/thumbFood/'.$value->thumb;
                 $datas['rate'] = $value->rate;
+                $datas['description'] = $value->description;
 
 
                 return $datas;
@@ -36,7 +37,7 @@ class FoodController extends Controller
                 $datas['id'] = $value->id;
                 $datas['name'] = $value->name;
                 $datas['price'] = $value->price;
-                $datas['faccility'] = $value->faccility;
+
                 $datas['thumb'] = env('APP_URL').'/thumbFood/'.$value->thumb;
                 $datas['rate'] = $value->rate;
 

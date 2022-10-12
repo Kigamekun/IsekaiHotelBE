@@ -3,8 +3,61 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\OrderFood;
+use App\Models\Food;
+use Illuminate\Support\Str;
 
 class OrderFoodController extends Controller
 {
-    //
+    /**
+          * Display a listing of the resource.
+          *
+          * @return \Illuminate\Http\Response
+          */
+    public function index()
+    {
+        if (isset($_GET['filter'])) {
+            $data = OrderFood::where('name', 'LIKE', '%'.$_GET['filter'].'%')->paginate(10);
+
+            return response()->json(['statusCode'=>200,'message'=>'Data Order Room has been obtained.','data'=>$data], 200);
+        } else {
+            $data = OrderFood::paginate(10);
+
+            return response()->json(['statusCode'=>200,'message'=>'Data Order Room has been obtained.','data'=>$data], 200);
+        }
+    }
+
+
+    public function order(Request $request)
+    {
+
+        $total = Food::where('id', $request->food_id)->first()->price & $request->qty;
+        $kode_transaksi = 'HT-STRCD'.Str::upper(Str::random(6));
+
+
+        $order = OrderFood::create([
+            'user_id' => 1,
+            'order_code' => $kode_transaksi,
+            'qty'=>$request->qty,
+            'address' => $request->address,
+            'food_id' => $request->food_id,
+            'total' => $total,
+        ]);
+
+        return response()->json(['statusCode'=>200,'message'=>'Order success.'], 200);
+    }
+
+    public function pay_food(Request $request, $id)
+    {
+        OrderFood::where('id', $id)->update(['status'=>3]);
+        $data = OrderFood::paginate(10);
+        return response()->json(['statusCode'=>200,'message'=>'Order pay.','data'=>$data], 200);
+    }
+
+    public function cancel_food(Request $request, $id)
+    {
+        OrderFood::where('id', $id)->update(['status'=>1]);
+        $data = OrderFood::paginate(10);
+        return response()->json(['statusCode'=>200,'message'=>'Order pay.','data'=>$data], 200);
+    }
 }

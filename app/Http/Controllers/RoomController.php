@@ -16,9 +16,6 @@ class RoomController extends Controller
     {
         if (isset($_GET['filter'])) {
             $data = Room::where('name', 'LIKE', '%'.$_GET['filter'].'%')->paginate(10);
-            return response()->json(['statusCode'=>200,'message'=>'Data Room has been obtained.','data'=>$data], 200);
-        } else {
-            $data = Room::where('hotel_id',$_GET['id'])->paginate(10);
             $data->getCollection()->transform(function ($value) {
                 $datas = [];
                 $datas['id'] = $value->id;
@@ -27,6 +24,23 @@ class RoomController extends Controller
                 $datas['faccility'] = $value->faccility;
                 $datas['thumb'] = env('APP_URL').'/thumbRoom/'.$value->thumb;
                 $datas['rate'] = $value->rate;
+                $datas['description'] = $value->description;
+
+
+                return $datas;
+            });
+            return response()->json(['statusCode'=>200,'message'=>'Data Room has been obtained.','data'=>$data], 200);
+        } else {
+            $data = Room::where('hotel_id', $_GET['id'])->paginate(10);
+            $data->getCollection()->transform(function ($value) {
+                $datas = [];
+                $datas['id'] = $value->id;
+                $datas['name'] = $value->name;
+                $datas['price'] = $value->price;
+                $datas['faccility'] = $value->faccility;
+                $datas['thumb'] = env('APP_URL').'/thumbRoom/'.$value->thumb;
+                $datas['rate'] = $value->rate;
+                $datas['description'] = $value->description;
 
 
                 return $datas;
@@ -35,6 +49,22 @@ class RoomController extends Controller
             return response()->json(['statusCode'=>200,'message'=>'Data Room has been obtained.','data'=>$data], 200);
         }
     }
+
+    public function search(Request $request)
+    {
+
+        $solve = [];
+        $data = Room::where(['hotel_id'=>$request->hotel_id])->get();
+        foreach ($data as $key => $value) {
+            $value->thumb = env('APP_URL').'/thumbRoom/'.$value->thumb;
+            $facc = json_decode(json_decode($value->faccility));
+            if (count(array_intersect($facc, $request->faccility)) == count($request->faccility)) {
+                $solve[] = $value;
+            }
+        }
+        return response()->json(['statusCode'=>200,'message'=>'Data Search has been obtained.','data'=>$solve], 200);
+    }
+
 
     /**
      * Store a newly created resource in storage.

@@ -19,6 +19,15 @@ class HotelController extends Controller
             return response()->json(['statusCode'=>200,'message'=>'Data Hotel has been obtained.','data'=>$data], 200);
         } else {
             $data = Hotel::paginate(10);
+            $data->getCollection()->transform(function ($value) {
+                $datas = [];
+                $datas['id'] = $value->id;
+                $datas['name'] = $value->name;
+                $datas['address'] = $value->address;
+                $datas['thumb'] = env('APP_URL').'/thumbHotel/'.$value->thumb;
+
+                return $datas;
+            });
             return response()->json(['statusCode'=>200,'message'=>'Data Hotel has been obtained.','data'=>$data], 200);
         }
     }
