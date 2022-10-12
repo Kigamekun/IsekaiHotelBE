@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Room;
 
 class RoomController extends Controller
 {
-     /**
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -17,7 +18,20 @@ class RoomController extends Controller
             $data = Room::where('name', 'LIKE', '%'.$_GET['filter'].'%')->paginate(10);
             return response()->json(['statusCode'=>200,'message'=>'Data Room has been obtained.','data'=>$data], 200);
         } else {
-            $data = Room::paginate(10);
+            $data = Room::where('hotel_id',$_GET['id'])->paginate(10);
+            $data->getCollection()->transform(function ($value) {
+                $datas = [];
+                $datas['id'] = $value->id;
+                $datas['name'] = $value->name;
+                $datas['price'] = $value->price;
+                $datas['faccility'] = $value->faccility;
+                $datas['thumb'] = env('APP_URL').'/thumbRoom/'.$value->thumb;
+                $datas['rate'] = $value->rate;
+
+
+                return $datas;
+            });
+
             return response()->json(['statusCode'=>200,'message'=>'Data Room has been obtained.','data'=>$data], 200);
         }
     }

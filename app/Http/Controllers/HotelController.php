@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Hotel;
 
 class HotelController extends Controller
 {
@@ -36,17 +37,16 @@ class HotelController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'price' => 'required',
-            'qty' => 'required',
+            'address' => 'required',
+
         ]);
         if ($validator->fails()) {
             return response()->json(['statusCode'=>401,'message'=>'You got an error while validating the form.','errors'=>$validator->errors()], 401);
         }
         Hotel::create([
             'name'=>$request->name,
-            'price'=>$request->price,
-            'qty'=>$request->qty,
-            'order_id'=>$request->order_id,
+            'address'=>$request->address,
+
         ]);
         return response()->json(['statusCode'=>200,'message'=>'Data Hotel has been created.'], 200);
     }
