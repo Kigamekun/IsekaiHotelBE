@@ -13,9 +13,13 @@ class CreateTransactionFoodTable extends Migration
      */
     public function up()
     {
-        Schema::create('transaction_foods', function (Blueprint $table) {
+        Schema::create('transaction_food', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('food_id');
+            $table->unsignedBigInteger('user_id');
 
+            $table->foreign('food_id')->references('id')->on('food')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

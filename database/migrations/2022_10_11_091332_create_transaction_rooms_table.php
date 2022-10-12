@@ -15,6 +15,11 @@ class CreateTransactionRoomsTable extends Migration
     {
         Schema::create('transaction_rooms', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('room_id');
+            $table->unsignedBigInteger('user_id');
+
+            $table->foreign('room_id')->references('id')->on('rooms')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
