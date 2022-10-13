@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\OrderRoom;
 use App\Models\Room;
 use Illuminate\Support\Str;
+use Validator;
 
 class OrderRoomController extends Controller
 {
@@ -37,8 +38,7 @@ class OrderRoomController extends Controller
         $kode_transaksi = 'ISHT-ROOM'.Str::upper(Str::random(6));
 
         $validator = Validator::make($request->all(), [
-            'user_id' => 'required',
-            'order_code' => 'required',
+
             'start_from' => 'required',
             'end_at' => 'required',
             'room_id' => 'required',
@@ -61,12 +61,12 @@ class OrderRoomController extends Controller
 
     public function pay_room(Request $request,$id)
     {
-        $validator = Validator::make($request->all(), [
-            'bukti' => 'required',
-        ]);
-        if ($validator->fails()) {
-            return response()->json(['statusCode'=>401,'message'=>'You got an error while validating the form.','errors'=>$validator->errors()], 401);
-        }
+        // $validator = Validator::make($request->all(), [
+        //     'bukti' => 'required',
+        // ]);
+        // if ($validator->fails()) {
+        //     return response()->json(['statusCode'=>401,'message'=>'You got an error while validating the form.','errors'=>$validator->errors()], 401);
+        // }
 
         OrderRoom::where('id',$id)->update(['status'=>3,'bukti'=>$request->bukti]);
         $data = OrderRoom::paginate(10);
@@ -78,5 +78,11 @@ class OrderRoomController extends Controller
         OrderRoom::where('id',$id)->update(['status'=>1]);
         $data = OrderRoom::paginate(10);
         return response()->json(['statusCode'=>200,'message'=>'Order pay.','data'=>$data], 200);
+    }
+
+
+    public function createInvoice(Request $req) {
+        $service = new Service();
+        return $service->createInvoice($req->all());
     }
 }

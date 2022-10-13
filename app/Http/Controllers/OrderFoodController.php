@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\OrderFood;
 use App\Models\Food;
 use Illuminate\Support\Str;
+use Validator;
 
 class OrderFoodController extends Controller
 {
@@ -33,8 +34,6 @@ class OrderFoodController extends Controller
         $kode_transaksi = 'ISHT-FOOD'.Str::upper(Str::random(6));
 
         $validator = Validator::make($request->all(), [
-            'user_id' => 'required',
-            'order_code' => 'required',
             'qty' => 'required',
             'address' => 'required',
             'food_id' => 'required',

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Validator;
 
 class CategoryFoodController extends Controller
 {
@@ -61,14 +62,12 @@ class CategoryFoodController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-
         ]);
         if ($validator->fails()) {
             return response()->json(['statusCode'=>401,'message'=>'You got an error while validating the form.','errors'=>$validator->errors()], 401);
         }
         CategoryFood::where('id', $id)->update([
             'name'=>$request->name,
-
         ]);
         return response()->json(['statusCode'=>200,'message'=>'Data CategoryFood has been updated.'], 200);
     }
