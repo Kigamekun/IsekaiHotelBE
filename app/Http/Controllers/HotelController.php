@@ -25,7 +25,6 @@ class HotelController extends Controller
                 $datas['name'] = $value->name;
                 $datas['address'] = $value->address;
                 $datas['thumb'] = env('APP_URL').'/thumbHotel/'.$value->thumb;
-
                 return $datas;
             });
             return response()->json(['statusCode'=>200,'message'=>'Data Hotel has been obtained.','data'=>$data], 200);
@@ -47,7 +46,7 @@ class HotelController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'address' => 'required',
-
+            'thumb' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json(['statusCode'=>401,'message'=>'You got an error while validating the form.','errors'=>$validator->errors()], 401);
@@ -55,6 +54,7 @@ class HotelController extends Controller
         Hotel::create([
             'name'=>$request->name,
             'address'=>$request->address,
+            'thumb'=>$request->thumb,
 
         ]);
         return response()->json(['statusCode'=>200,'message'=>'Data Hotel has been created.'], 200);
@@ -75,17 +75,16 @@ class HotelController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'price' => 'required',
-            'qty' => 'required',
+            'address' => 'required',
+            'thumb' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json(['statusCode'=>401,'message'=>'You got an error while validating the form.','errors'=>$validator->errors()], 401);
         }
         Hotel::where('id', $id)->update([
             'name'=>$request->name,
-            'price'=>$request->price,
-            'qty'=>$request->qty,
-            'order_id'=>$request->order_id,
+            'address'=>$request->address,
+            'thumb'=>$request->thumb,
         ]);
         return response()->json(['statusCode'=>200,'message'=>'Data Hotel has been updated.'], 200);
     }

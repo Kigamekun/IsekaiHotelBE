@@ -21,12 +21,9 @@ class FoodController extends Controller
                 $datas['id'] = $value->id;
                 $datas['name'] = $value->name;
                 $datas['price'] = $value->price;
-
                 $datas['thumb'] = env('APP_URL').'/thumbFood/'.$value->thumb;
                 $datas['rate'] = $value->rate;
                 $datas['description'] = $value->description;
-
-
                 return $datas;
             });
             return response()->json(['statusCode'=>200,'message'=>'Data Food has been obtained.','data'=>$data], 200);
@@ -37,11 +34,8 @@ class FoodController extends Controller
                 $datas['id'] = $value->id;
                 $datas['name'] = $value->name;
                 $datas['price'] = $value->price;
-
                 $datas['thumb'] = env('APP_URL').'/thumbFood/'.$value->thumb;
                 $datas['rate'] = $value->rate;
-
-
                 return $datas;
             });
             return response()->json(['statusCode'=>200,'message'=>'Data Food has been obtained.','data'=>$data], 200);
@@ -64,6 +58,7 @@ class FoodController extends Controller
             'name' => 'required',
             'price' => 'required',
             'qty' => 'required',
+            'category_id' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json(['statusCode'=>401,'message'=>'You got an error while validating the form.','errors'=>$validator->errors()], 401);
@@ -93,7 +88,8 @@ class FoodController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'price' => 'required',
-            'qty' => 'required',
+            'thumb' => 'required',
+            'category_id' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json(['statusCode'=>401,'message'=>'You got an error while validating the form.','errors'=>$validator->errors()], 401);
@@ -101,8 +97,8 @@ class FoodController extends Controller
         Food::where('id', $id)->update([
             'name'=>$request->name,
             'price'=>$request->price,
-            'qty'=>$request->qty,
-            'order_id'=>$request->order_id,
+            'thumb'=>$request->thumb,
+            'category_id'=>$request->category_id,
         ]);
         return response()->json(['statusCode'=>200,'message'=>'Data Food has been updated.'], 200);
     }

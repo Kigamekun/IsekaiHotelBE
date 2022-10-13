@@ -25,8 +25,6 @@ class RoomController extends Controller
                 $datas['thumb'] = env('APP_URL').'/thumbRoom/'.$value->thumb;
                 $datas['rate'] = $value->rate;
                 $datas['description'] = $value->description;
-
-
                 return $datas;
             });
             return response()->json(['statusCode'=>200,'message'=>'Data Room has been obtained.','data'=>$data], 200);
@@ -41,8 +39,6 @@ class RoomController extends Controller
                 $datas['thumb'] = env('APP_URL').'/thumbRoom/'.$value->thumb;
                 $datas['rate'] = $value->rate;
                 $datas['description'] = $value->description;
-
-
                 return $datas;
             });
 
@@ -77,11 +73,11 @@ class RoomController extends Controller
         if (is_null(Order::where('id', $request->order_id)->first())) {
             return response()->json(['statusCode'=>401,'message'=>'Data tidak dRoomukan.'], 401);
         }
-
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'price' => 'required',
             'qty' => 'required',
+            'order_id' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json(['statusCode'=>401,'message'=>'You got an error while validating the form.','errors'=>$validator->errors()], 401);
@@ -112,6 +108,7 @@ class RoomController extends Controller
             'name' => 'required',
             'price' => 'required',
             'qty' => 'required',
+            'order_id' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json(['statusCode'=>401,'message'=>'You got an error while validating the form.','errors'=>$validator->errors()], 401);

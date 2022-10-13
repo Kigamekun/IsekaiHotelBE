@@ -18,11 +18,9 @@ class OrderFoodController extends Controller
     {
         if (isset($_GET['filter'])) {
             $data = OrderFood::where('name', 'LIKE', '%'.$_GET['filter'].'%')->paginate(10);
-
             return response()->json(['statusCode'=>200,'message'=>'Data Order Room has been obtained.','data'=>$data], 200);
         } else {
             $data = OrderFood::paginate(10);
-
             return response()->json(['statusCode'=>200,'message'=>'Data Order Room has been obtained.','data'=>$data], 200);
         }
     }
@@ -32,8 +30,19 @@ class OrderFoodController extends Controller
     {
 
         $total = Food::where('id', $request->food_id)->first()->price & $request->qty;
-        $kode_transaksi = 'HT-STRCD'.Str::upper(Str::random(6));
+        $kode_transaksi = 'ISHT-FOOD'.Str::upper(Str::random(6));
 
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required',
+            'order_code' => 'required',
+            'qty' => 'required',
+            'address' => 'required',
+            'food_id' => 'required',
+            'total' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['statusCode'=>401,'message'=>'You got an error while validating the form.','errors'=>$validator->errors()], 401);
+        }
 
         $order = OrderFood::create([
             'user_id' => 1,
