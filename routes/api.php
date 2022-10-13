@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{HotelController,RoomController,FoodController,OrderRoomController,OrderFoodController};
 use App\Http\Controllers\API\{AuthController};
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -21,13 +22,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::prefix('v1')->group(function () {
-
     Route::prefix('auth')->group(function () {
         Route::post('/register', [AuthController::class, 'register']);
         Route::post('/login', [AuthController::class, 'login']);
         Route::post('/logout', [AuthController::class, 'logout']);
-
-
     });
 
 
@@ -47,6 +45,7 @@ Route::prefix('v1')->group(function () {
     });
 
     Route::middleware(['auth:sanctum'])->group(function () {
+        Route::get('/checkToken', [AuthController::class, 'checkToken']);
         Route::prefix('room')->group(function () {
             Route::post('/store', [RoomController::class,'store'])->name('api.room.store');
             Route::post('/search', [RoomController::class,'search'])->name('api.room.search');
