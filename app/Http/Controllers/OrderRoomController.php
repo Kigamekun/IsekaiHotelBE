@@ -69,14 +69,14 @@ class OrderRoomController extends Controller
         // }
 
         OrderRoom::where('id',$id)->update(['status'=>3,'bukti'=>$request->bukti]);
-        $data = OrderRoom::paginate(10);
+        $data = OrderRoom::where('user_id',$request->user()->id)->paginate(10);
         return response()->json(['statusCode'=>200,'message'=>'Order pay.','data'=>$data], 200);
     }
 
     public function cancel_room(Request $request,$id)
     {
         OrderRoom::where('id',$id)->update(['status'=>1]);
-        $data = OrderRoom::paginate(10);
+        $data = OrderRoom::where('user_id',$request->user()->id)->paginate(10);
         return response()->json(['statusCode'=>200,'message'=>'Order pay.','data'=>$data], 200);
     }
 

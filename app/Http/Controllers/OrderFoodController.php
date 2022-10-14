@@ -15,13 +15,13 @@ class OrderFoodController extends Controller
           *
           * @return \Illuminate\Http\Response
           */
-    public function index()
+    public function index(Request $request)
     {
         if (isset($_GET['filter'])) {
-            $data = OrderFood::where('name', 'LIKE', '%'.$_GET['filter'].'%')->paginate(10);
+            $data = OrderFood::where('name', 'LIKE', '%'.$_GET['filter'].'%')->where('user_id',$request->user()->id)->paginate(10);
             return response()->json(['statusCode'=>200,'message'=>'Data Order Room has been obtained.','data'=>$data], 200);
         } else {
-            $data = OrderFood::paginate(10);
+            $data = OrderFood::where('user_id',$request->user()->id)->paginate(10);
             return response()->json(['statusCode'=>200,'message'=>'Data Order Room has been obtained.','data'=>$data], 200);
         }
     }
@@ -37,14 +37,14 @@ class OrderFoodController extends Controller
             'qty' => 'required',
             'address' => 'required',
             'food_id' => 'required',
-            'total' => 'required',
+
         ]);
         if ($validator->fails()) {
             return response()->json(['statusCode'=>401,'message'=>'You got an error while validating the form.','errors'=>$validator->errors()], 401);
         }
 
         $order = OrderFood::create([
-            'user_id' => 1,
+            'user_id' => $request->user()->id,
             'order_code' => $kode_transaksi,
             'qty'=>$request->qty,
             'address' => $request->address,
@@ -58,14 +58,14 @@ class OrderFoodController extends Controller
     public function pay_food(Request $request, $id)
     {
         OrderFood::where('id', $id)->update(['status'=>3]);
-        $data = OrderFood::paginate(10);
+        $data = OrderFood::where('user_id',$request->user()->id)->paginate(10);
         return response()->json(['statusCode'=>200,'message'=>'Order pay.','data'=>$data], 200);
     }
 
     public function cancel_food(Request $request, $id)
     {
         OrderFood::where('id', $id)->update(['status'=>1]);
-        $data = OrderFood::paginate(10);
+        $data = OrderFood::where('user_id',$request->user()->id)->paginate(10);
         return response()->json(['statusCode'=>200,'message'=>'Order pay.','data'=>$data], 200);
     }
 }

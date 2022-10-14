@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\{HotelController,CheckoutController,RoomController,FoodController,OrderRoomController,OrderFoodController};
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,3 +16,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::get("/getInvoice/{id_room}", [CheckoutController::class, 'getInvoice']);
